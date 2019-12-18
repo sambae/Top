@@ -6,6 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -30,6 +31,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildTypes.each {
+        Properties properties = new Properties()
+
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        def apiKey = properties.getProperty("nyt_api_key", "")
+
+        it.buildConfigField 'String', "API_KEY", apiKey
+
+        it.resValue 'string', "api_key", apiKey
+    }
+
 }
 
 dependencies {
@@ -58,6 +71,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.7.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.7.0'
     implementation 'com.squareup.moshi:moshi:1.9.2'
+    implementation 'com.squareup.moshi:moshi-adapters:1.9.2'
     implementation 'com.squareup.picasso:picasso:2.71828'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.1'
 }
