@@ -1,6 +1,8 @@
 package com.sambae.top.networking
 
-import com.sambae.top.domain.Article
+import android.annotation.SuppressLint
+import com.sambae.top.database.DatabaseArticle
+import com.sambae.top.domain.Category
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.util.*
@@ -8,26 +10,30 @@ import java.util.*
 
 @JsonClass(generateAdapter = true)
 data class NetworkArticle(
+    @Json(name = "short_url") val url: String,
     @Json(name = "title") val title: String,
     @Json(name = "abstract") val abstract: String,
     @Json(name = "published_date") val published_date: Date,
     @Json(name = "multimedia") val images: List<NetworkImage>
 ) {
-    fun toDomain(): Article {
+    fun toEntity(category: Category): DatabaseArticle {
         val smallThumb = images.first { it.format == "Standard Thumbnail" }
         val largeThumb = images.first { it.format == "thumbLarge" }
 
-        return Article(title, published_date, abstract, smallThumb.url, largeThumb.url)
+        return DatabaseArticle(url, title, published_date, abstract, smallThumb.url, largeThumb.url, category)
     }
 }
 
 @JsonClass(generateAdapter = true)
 data class NetworkResponse(
     @Json(name = "status") val status: String,
+    @Json(name = "section") val category: String,
     @Json(name = "results") val articles: List<NetworkArticle>
 ) {
-    fun toDomain(): List<Article> {
-        return articles.map { it.toDomain() }
+    @SuppressLint("DefaultLocale")
+    fun toEntity(): List<DatabaseArticle> {
+        val category = Category.valueOf(category.toUpperCase())
+        return articles.map { it.toEntity(category) }
     }
 }
 
