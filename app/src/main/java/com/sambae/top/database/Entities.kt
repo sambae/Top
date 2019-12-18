@@ -14,7 +14,7 @@ data class DatabaseArticle(
     var abstract: String = "",
     var smallThumbUrl: String = "",
     var largeThumbUrl: String = "",
-    var category: Category
+    var category: Category = Category.FOOD
 ) {
     fun toDomain(): Article {
         return Article(url, title, publishDate, abstract, smallThumbUrl, largeThumbUrl)

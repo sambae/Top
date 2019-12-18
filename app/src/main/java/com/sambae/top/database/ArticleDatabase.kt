@@ -15,7 +15,7 @@ interface ArticleDao {
 }
 
 @Database(entities = [DatabaseArticle::class], version = 1, exportSchema = false)
-@TypeConverters(DateConverters::class)
+@TypeConverters(DateConverters::class, CategoryConverters::class)
 abstract class ArticleDatabase: RoomDatabase() {
     abstract val articleDao: ArticleDao
 
