@@ -2,11 +2,42 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/feedFragment">
+    app:startDestination="@id/food_fragment">
 
     <fragment
-        android:id="@+id/feedFragment"
+        android:id="@+id/food_fragment"
+        android:name="com.sambae.top.feed.FoodFragment"
+        android:label="fragment_food"
+        tools:layout="@layout/fragment_food" >
+        <action
+            android:id="@+id/action_foodFragment_to_feedFragment"
+            app:destination="@id/feed_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tech_fragment"
+        android:name="com.sambae.top.feed.TechFragment"
+        android:label="fragment_tech"
+        tools:layout="@layout/fragment_tech" >
+        <action
+            android:id="@+id/action_techFragment_to_feedFragment"
+            app:destination="@id/feed_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/feed_fragment"
         android:name="com.sambae.top.feed.FeedFragment"
         android:label="FeedFragment"
-        tools:layout="@layout/fragment_feed" />
+        tools:layout="@layout/fragment_feed" >
+        <argument
+            android:name="category"
+            app:argType="com.sambae.top.domain.Category" />
+    </fragment>
+    <fragment
+        android:id="@+id/travel_fragment"
+        android:name="com.sambae.top.feed.TravelFragment"
+        android:label="fragment_travel"
+        tools:layout="@layout/fragment_travel" >
+        <action
+            android:id="@+id/action_travelFragment_to_feed_fragment"
+            app:destination="@id/feed_fragment" />
+    </fragment>
 </navigation>

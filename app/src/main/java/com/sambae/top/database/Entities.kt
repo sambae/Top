@@ -13,8 +13,8 @@ data class DatabaseArticle(
     var title: String = "",
     var publishDate: LocalDateTime = LocalDateTime.now(),
     var abstract: String = "",
-    var smallThumbUrl: String = "",
-    var largeThumbUrl: String = "",
+    var smallThumbUrl: String? = null,
+    var largeThumbUrl: String? = null,
     var category: Category = Category.FOOD
 ) {
     fun toDomain(): Article {

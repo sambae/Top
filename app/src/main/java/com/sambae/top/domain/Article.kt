@@ -7,6 +7,6 @@ data class Article(
     val title: String,
     val publishDate: LocalDateTime,
     val abstract: String,
-    val smallThumbUrl: String,
-    val largeThumbUrl: String
+    val smallThumbUrl: String?,
+    val largeThumbUrl: String?
 )

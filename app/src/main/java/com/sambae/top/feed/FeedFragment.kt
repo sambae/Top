@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -29,14 +30,14 @@ class FeedFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val args = FeedFragmentArgs.fromBundle(requireNotNull(arguments))
         val binding = FragmentFeedBinding.inflate(inflater)
 
         val application = requireNotNull(activity).application
         val db = ArticleDatabase.getInstance(application)
-        val category = Category.FOOD
-        val repo = Repository(db, Network.service, category)
+        val repo = Repository(db, Network.service, args.category)
 
-        val factory = FeedViewModel.Factory(category, repo)
+        val factory = FeedViewModel.Factory(args.category, repo)
 
         val viewModel = ViewModelProvider(this, factory)
             .get(FeedViewModel::class.java)
@@ -50,11 +51,12 @@ class FeedFragment: Fragment() {
             adapter = listAdapter
         }
 
-
         viewModel.articles.observe(this, Observer {
             Log.i("FeedFragment", it.toString())
             listAdapter.submitList(it)
         })
+
+        (activity as AppCompatActivity).supportActionBar?.title = args.category.title()
 
         return binding.root
     }
@@ -87,10 +89,21 @@ class ArticleListViewHolder(private val binding: ArticleListItemBinding): Recycl
 
         binding.thumbnail.clipToOutline = true
 
-        Picasso.get()
-            .load(article.smallThumbUrl)
-            .transform(RoundedCornersTransformation(12, 0, RoundedCornersTransformation.CornerType.LEFT))
-            .into(binding.thumbnail)
+        if (article.smallThumbUrl != null) {
+            Picasso.get()
+                .load(article.smallThumbUrl)
+                .transform(
+                    RoundedCornersTransformation(
+                        12,
+                        0,
+                        RoundedCornersTransformation.CornerType.LEFT
+                    )
+                )
+                .into(binding.thumbnail)
+        } else {
+            binding.thumbnail.setImageIcon(null)
+        }
+
 
     }
 

@@ -11,21 +11,24 @@ import java.util.*
 
 @JsonClass(generateAdapter = true)
 data class NetworkArticle(
-    @Json(name = "short_url") val url: String,
+    @Json(name = "url") val url: String,
     @Json(name = "title") val title: String,
     @Json(name = "abstract") val abstract: String,
     @Json(name = "published_date") val published_date: Date,
     @Json(name = "multimedia") val images: List<NetworkImage>
 ) {
     fun toEntity(category: Category): DatabaseArticle {
-        val smallThumb = images.first { it.format == "Standard Thumbnail" }
-        val largeThumb = images.first { it.format == "thumbLarge" }
+        val filteredForSmall = images.filter { it.format == "Standard Thumbnail" }
+        val filteredForLarge = images.filter { it.format == "thumbLarge" }
+
+        val smallThumb = if (filteredForSmall.isEmpty()) null else filteredForSmall.first()
+        val largeThumb = if (filteredForLarge.isEmpty()) null else filteredForLarge.first()
 
         val localDate = published_date.toInstant()
             .atZone(TimeZone.getDefault().toZoneId())
             .toLocalDateTime()
 
-        return DatabaseArticle(url, title, localDate, abstract, smallThumb.url, largeThumb.url, category)
+        return DatabaseArticle(url, title, localDate, abstract, smallThumb?.url, largeThumb?.url, category)
     }
 }
 
