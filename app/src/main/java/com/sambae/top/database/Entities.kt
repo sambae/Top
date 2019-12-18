@@ -4,13 +4,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.sambae.top.domain.Article
 import com.sambae.top.domain.Category
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity(tableName = "article_table")
 data class DatabaseArticle(
     @PrimaryKey var url: String = "",
     var title: String = "",
-    var publishDate: Date = Date(),
+    var publishDate: LocalDateTime = LocalDateTime.now(),
     var abstract: String = "",
     var smallThumbUrl: String = "",
     var largeThumbUrl: String = "",

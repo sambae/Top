@@ -5,6 +5,7 @@ import com.sambae.top.database.DatabaseArticle
 import com.sambae.top.domain.Category
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -20,7 +21,11 @@ data class NetworkArticle(
         val smallThumb = images.first { it.format == "Standard Thumbnail" }
         val largeThumb = images.first { it.format == "thumbLarge" }
 
-        return DatabaseArticle(url, title, published_date, abstract, smallThumb.url, largeThumb.url, category)
+        val localDate = published_date.toInstant()
+            .atZone(TimeZone.getDefault().toZoneId())
+            .toLocalDateTime()
+
+        return DatabaseArticle(url, title, localDate, abstract, smallThumb.url, largeThumb.url, category)
     }
 }
 

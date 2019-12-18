@@ -3,17 +3,27 @@ package com.sambae.top.database
 import android.annotation.SuppressLint
 import androidx.room.TypeConverter
 import com.sambae.top.domain.Category
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.*
 
 class DateConverters {
     @TypeConverter
-    fun fromTimestamp(value: Long?): Date? {
-        return value?.let { Date(it) }
+    fun fromTimestamp(value: Long?): LocalDateTime? {
+        return value?.let {
+            LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(it),
+                TimeZone.getDefault().toZoneId()
+            )
+        }
     }
 
     @TypeConverter
-    fun dateToTimestamp(date: Date?): Long? {
-        return date?.time?.toLong()
+    fun dateToTimestamp(date: LocalDateTime?): Long? {
+        return date?.atZone(TimeZone.getDefault().toZoneId())
+            ?.toInstant()
+            ?.toEpochMilli()
     }
 }
 

@@ -1,11 +1,11 @@
 package com.sambae.top.domain
 
-import java.util.*
+import java.time.LocalDateTime
 
 data class Article(
     val url: String,
     val title: String,
-    val publishDate: Date,
+    val publishDate: LocalDateTime,
     val abstract: String,
     val smallThumbUrl: String,
     val largeThumbUrl: String
