@@ -16,7 +16,6 @@ const val BASE_URL = "https://api.nytimes.com/svc/topstories/v2/"
 interface NetworkInterface {
     @GET("{category}.json")
     suspend fun getArticles(@Path("category") category: Category): NetworkResponse
-
 }
 
 object Network {

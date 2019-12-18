@@ -14,7 +14,7 @@ class Repository(
     private val service: NetworkInterface,
     private val category: Category
 ) {
-    var foodFeed: LiveData<List<Article>> = Transformations.map(database.articleDao.getArticlesFor(category)) {
+    var articles: LiveData<List<Article>> = Transformations.map(database.articleDao.getArticlesFor(category)) {
         it.map { entity -> entity.toDomain() }
     }
 
