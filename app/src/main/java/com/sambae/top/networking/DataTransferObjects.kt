@@ -41,5 +41,6 @@ data class NetworkResponse(
 data class NetworkImage(
     @Json(name = "url") val url: String,
     @Json(name = "format") val format: String
+
 )
 
