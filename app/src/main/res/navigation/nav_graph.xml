@@ -30,6 +30,9 @@
         <argument
             android:name="category"
             app:argType="com.sambae.top.domain.Category" />
+        <action
+            android:id="@+id/action_feed_fragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/travel_fragment"
@@ -39,5 +42,14 @@
         <action
             android:id="@+id/action_travelFragment_to_feed_fragment"
             app:destination="@id/feed_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.sambae.top.detail.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="article"
+            app:argType="com.sambae.top.domain.Article" />
     </fragment>
 </navigation>

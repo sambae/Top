@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -45,11 +46,11 @@ class FeedFragment: Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        val listAdapter = ArticleListAdapter()
+        val listAdapter = ArticleListAdapter(ArticleListAdapter.OnClickListener {
+            navigateTo(it)
+        })
 
-        val listView = binding.feedList.apply {
-            adapter = listAdapter
-        }
+        binding.feedList.adapter = listAdapter
 
         viewModel.articles.observe(this, Observer {
             Log.i("FeedFragment", it.toString())
@@ -60,15 +61,22 @@ class FeedFragment: Fragment() {
 
         return binding.root
     }
+
+    private fun navigateTo(article: Article) {
+        val action = FeedFragmentDirections.actionFeedFragmentToDetailFragment(article)
+        findNavController().navigate(action)
+    }
 }
 
-class ArticleListAdapter: ListAdapter<Article, ArticleListViewHolder>(DiffCallback) {
+class ArticleListAdapter(private val onClickListener: OnClickListener):
+    ListAdapter<Article, ArticleListViewHolder>(DiffCallback)
+{
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleListViewHolder {
         return ArticleListViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: ArticleListViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onClickListener)
     }
 
     object DiffCallback: DiffUtil.ItemCallback<Article>() {
@@ -80,11 +88,19 @@ class ArticleListAdapter: ListAdapter<Article, ArticleListViewHolder>(DiffCallba
             return oldItem == newItem
         }
     }
+
+    class OnClickListener(private val listener: (Article) -> Unit) {
+        fun onClick(article: Article) = listener(article)
+    }
 }
 
 class ArticleListViewHolder(private val binding: ArticleListItemBinding): RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(article: Article) {
+    fun bind(article: Article, clickListener: ArticleListAdapter.OnClickListener) {
+        binding.root.setOnClickListener {
+            clickListener.onClick(article)
+        }
+
         binding.article = article
 
         binding.thumbnail.clipToOutline = true
@@ -103,8 +119,6 @@ class ArticleListViewHolder(private val binding: ArticleListItemBinding): Recycl
         } else {
             binding.thumbnail.setImageIcon(null)
         }
-
-
     }
 
     companion object {

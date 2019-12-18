@@ -1,6 +1,7 @@
 package com.sambae.top.networking
 
 import android.annotation.SuppressLint
+import android.util.Log
 import com.sambae.top.database.DatabaseArticle
 import com.sambae.top.domain.Category
 import com.squareup.moshi.Json
@@ -19,7 +20,7 @@ data class NetworkArticle(
 ) {
     fun toEntity(category: Category): DatabaseArticle {
         val filteredForSmall = images.filter { it.format == "Standard Thumbnail" }
-        val filteredForLarge = images.filter { it.format == "thumbLarge" }
+        val filteredForLarge = images.filter { it.format == "superJumbo" }
 
         val smallThumb = if (filteredForSmall.isEmpty()) null else filteredForSmall.first()
         val largeThumb = if (filteredForLarge.isEmpty()) null else filteredForLarge.first()
